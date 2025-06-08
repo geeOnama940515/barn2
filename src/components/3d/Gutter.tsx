@@ -70,20 +70,6 @@ const Gutter: React.FC<GutterProps> = ({ width, length, height, pitch, side }) =
     });
   }, []);
   
-  // Downspout geometry and material
-  const downspoutGeometry = useMemo(() => {
-    return new THREE.CylinderGeometry(0.18, 0.18, height + 1, 8); // 3.6" diameter
-  }, [height]);
-  
-  const downspoutMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: '#B8B8B8',
-      metalness: 0.8,
-      roughness: 0.3,
-      envMapIntensity: 1.0,
-    });
-  }, []);
-  
   // Gutter mounting brackets
   const createBracket = (position: number) => {
     const bracketGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.1);
@@ -118,7 +104,7 @@ const Gutter: React.FC<GutterProps> = ({ width, length, height, pitch, side }) =
   
   return (
     <group position={[gutterX, gutterY, 0]}>
-      {/* Main gutter channel - this is the actual gutter! */}
+      {/* Main gutter channel */}
       <mesh
         position={[0, 0, 0]}
         rotation={[Math.PI/2, 0, 0]}
@@ -131,25 +117,6 @@ const Gutter: React.FC<GutterProps> = ({ width, length, height, pitch, side }) =
       
       {/* Gutter mounting brackets spaced every 4 feet */}
       {bracketPositions.map(pos => createBracket(pos))}
-      
-      {/* Downspouts at both ends of the gutter */}
-      <mesh
-        position={[0, -(height + 1)/2, length/2 - 1]}
-        castShadow
-        receiveShadow
-      >
-        <primitive object={downspoutGeometry} />
-        <primitive object={downspoutMaterial} attach="material" />
-      </mesh>
-      
-      <mesh
-        position={[0, -(height + 1)/2, -length/2 + 1]}
-        castShadow
-        receiveShadow
-      >
-        <primitive object={downspoutGeometry} />
-        <primitive object={downspoutMaterial} attach="material" />
-      </mesh>
       
       {/* Gutter end caps to seal the channel */}
       <mesh
@@ -170,7 +137,7 @@ const Gutter: React.FC<GutterProps> = ({ width, length, height, pitch, side }) =
         <primitive object={gutterMaterial} attach="material" />
       </mesh>
       
-      {/* Gutter outlet connections where downspouts attach */}
+      {/* Gutter outlet connections (where downspouts would attach) */}
       <mesh
         position={[0, -gutterDepth + 0.1, length/2 - 1]}
         castShadow
